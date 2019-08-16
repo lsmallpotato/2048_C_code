@@ -1,25 +1,40 @@
 # 2048_C_code
 用C语言编写的2048
 
+# 1
+
+## 基础知识
+
+**要实现我们的 2048 小游戏，需要涉及一些数据结构的知识，以及一些 Linux 的系统调用。此外，为了方便在屏幕上使用字符绘图，我们还需要使用一个文本界面的屏幕绘图库 ncurses ，具体到操作就是在编译的时候需要加上 -lcurses 选项。**
+安装ncurses库：
+`sudo apt-get install libncurses5-dev`
+
+## 设计思路
+
+**要实现 2048 游戏目前有两个关键点：**
+
+1. 在满足条件情况下消除方块
+2. 允许在游戏主界面（16 宫格）中任意一格输出数据
+   其中第二点借助 ncurses 库可以较容易实现，但是第一点要稍微麻烦些。第一点的实现思路是，我们创建一个与游戏地图相同维数的数组矩阵，通过数组矩阵来维护 2048 游戏中每个格子的数据与状态，从而玩家的移动操作都可以映射为对数组矩阵的操作。
+
 ## 基础工作
 
 1. 引头文件
    编写自己的头文件head.h。
    添加库函数头文件：
 
-​```
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
-
-​```
+```
 
 2. 创建函数
 
-​```
+```c
 void draw(); //用于绘制游戏界面
 void play(); //游戏运行的逻辑主体
 void init(); //初始化函数，用于完成一些必要的初始化操作
@@ -27,14 +42,13 @@ void draw_one(int y, int x); //绘制单个数字
 void cnt_value(int *new_y, int *new_x);
 int game_over(); //结束游戏
 int cnt_one(int y, int x);
-
-​```
+```
 
 3. 编写函数
    创建函数文件head.c。
    添加函数的内容。
 
-​```
+```c
 #include "head.h"
 int a[4][4] = {0};
 int empty;
@@ -75,6 +89,7 @@ void play()
 	int x, y, i, new_x, new_y, temp;
 	int old_empty, move;
 	char ch;
+
 	while(1)
 	{
 		move = 0;
@@ -407,10 +422,11 @@ int cnt_one(int y, int x)
 	return value;
 
 }
-​```
+```
+
 4. 编写主函数game_2048.c
 
-​```
+```c
 #include "head.h"
 int main()
 {
@@ -419,10 +435,11 @@ int main()
 	endwin();
 	return 0;
 }
-​```
+```
+
 5. 编写makefile文件
 
-​```
+```makefile
 test:game_2048.o head.o
 	gcc game_2048.o head.o -o test -lcurses
 game_2048.o:game_2048.c
@@ -434,14 +451,12 @@ head.o:head.c
 clean:
 	rm *.o test
 ```
+
 6. 编译
    `make`
 7. 结果
    ![](picture/1.png)
    ![](picture/2.png)
-
-
-
 -------------------------------------------------------------
 
 # 2
@@ -453,4 +468,3 @@ clean:
 ![](picture/3.png)
 
 ![](picture/2.png)
-
